@@ -30,3 +30,52 @@ flowchart LR
     E <--> C
 
 ```
+# Arquitetura do Solução
+```mermaid
+flowchart LR
+
+    %% ========================
+    %% CI/CD
+    %% ========================
+    subgraph CICD["CI/CD - GitHub Actions"]
+        DEV["Developer"]
+        GH["GitHub Repository"]
+        GA["GitHub Actions<br>Build Docker Image"]
+        DH["DockerHub<br>Container Registry"]
+
+        DEV --> GH
+        GH --> GA
+        GA --> DH
+    end
+
+
+    %% ========================
+    %% AMBIENTE LOCAL
+    %% ========================
+    subgraph LOCAL["Ambiente Local<br>Windows + Docker Desktop"]
+
+        DD["Docker Desktop"]
+
+        APP["Application Container"]
+
+        MQ["RabbitMQ Container<br>Mensageria"]
+
+        DD --> APP
+        DD --> MQ
+
+    end
+
+
+    %% ========================
+    %% APM
+    %% ========================
+    subgraph APM["Observabilidade"]
+        NR["New Relic APM"]
+    end
+
+
+    %% ========================
+    %% FLUXOS
+    %% ==========
+
+```
