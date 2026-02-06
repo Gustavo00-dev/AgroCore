@@ -12,8 +12,7 @@ flowchart LR
 
     subgraph Autenticacao
         B["APIAgroCoreLogin<br>Gerência Token JWT<br>Login de Usuários"]
-        C[(MongoDB)]
-        B <--> C
+       
     end
 
     subgraph Mensageria
@@ -24,16 +23,25 @@ flowchart LR
         E["APIAgroCoreDados<br>Gerência Propriedades e Talhões<br>Consumer RabbitMQ"]
     end
 
+    C[(MongoDB)]
+
     A -->|HTTPS| B
     A -->|Publica mensagens| D
     D -->|Consome mensagens| E
     E <--> C
+    B <--> C
 
 ```
 # Arquitetura do Solução
 ```mermaid
 flowchart LR
 
+    %% ========================
+    %% APM
+    %% ========================
+    subgraph APM["Observabilidade"]
+        NR["New Relic APM"]
+    end
     %% ========================
     %% CI/CD
     %% ========================
@@ -52,7 +60,7 @@ flowchart LR
     %% ========================
     %% AMBIENTE LOCAL
     %% ========================
-    subgraph LOCAL["Ambiente Local<br>Windows + Docker Desktop"]
+    subgraph LOCAL["Ambiente Local"]
 
         DD["Docker Desktop"]
 
@@ -63,14 +71,6 @@ flowchart LR
         DD --> APP
         DD --> MQ
 
-    end
-
-
-    %% ========================
-    %% APM
-    %% ========================
-    subgraph APM["Observabilidade"]
-        NR["New Relic APM"]
     end
 
 
