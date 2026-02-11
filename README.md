@@ -19,17 +19,22 @@ flowchart LR
         D["RabbitMQ<br>Filas:<br>- Cadastro de Propriedade<br>- Cadastro de Talhões<br>- Ingestão Sensores"]
     end
 
+    subgraph Notificações
+        F(MSAgroNotificacao)
+    end
+
     subgraph Dados
         E["APIAgroCoreDados<br>Gerência Propriedades e Talhões<br>Consumer RabbitMQ"]
     end
 
     C[(MongoDB)]
-
+    
     A -->|HTTPS| B
     A -->|Publica mensagens| D
     D -->|Consome mensagens| E
     E <--> C
     B <--> C
+    F <--> C
 
 ```
 # Arquitetura do Solução
