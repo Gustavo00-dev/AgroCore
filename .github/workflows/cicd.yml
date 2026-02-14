@@ -2,7 +2,7 @@ name: AgroCore CI/CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 jobs:
 
