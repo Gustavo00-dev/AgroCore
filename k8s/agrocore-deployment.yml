@@ -1,12 +1,12 @@
+# =========================
+# DEPLOYMENT
+# =========================
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
   name: agrocore
-
 spec:
   replicas: 1
-
   selector:
     matchLabels:
       app: agrocore
@@ -20,8 +20,52 @@ spec:
       containers:
         - name: agrocore
           image: euturial/agrocore:latest
-
           imagePullPolicy: Always
 
           ports:
             - containerPort: 8080
+
+---
+# =========================
+# SERVICE (ClusterIP)
+# =========================
+apiVersion: v1
+kind: Service
+metadata:
+  name: agrocore
+spec:
+  type: ClusterIP
+
+  selector:
+    app: agrocore
+
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+
+---
+# =========================
+# INGRESS
+# =========================
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: agrocore-ingress
+
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+
+spec:
+  ingressClassName: nginx
+
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: agrocore
+                port:
+                  number: 80
