@@ -11,15 +11,15 @@ namespace APIAgroCoreOrquestradora.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class LoginUserController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly ILoginService _loginService;
+        private readonly IUserService _userService;
 
-        public LoginUserController(IConfiguration configuration, ILoginService loginService)
+        public UserController(IConfiguration configuration, IUserService userService)
         {
             _configuration = configuration;
-            _loginService = loginService;
+            _userService = userService;
         }
 
         /// <summary>
@@ -28,14 +28,14 @@ namespace APIAgroCoreOrquestradora.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestModel request)
+        public async Task<IActionResult> Login([FromBody] BasicUserRequestModel request)
         {
             if (request is null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Senha))
             {
                 return BadRequest(new { message = "Email e Senha são obrigatórios." });
             }
 
-            var isAuthenticated = await _loginService.Authenticate(request);
+            var isAuthenticated = await _userService.Authenticate(request);
             if (!isAuthenticated)
             {
                 return Unauthorized(new { message = "Credenciais inválidas." });
@@ -66,6 +66,23 @@ namespace APIAgroCoreOrquestradora.Controllers
             var tokenString = tokenHandler.WriteToken(token);
 
             return Ok(new LoginResponseModel { Token = tokenString, ExpiresAt = tokenDescriptor.Expires });
+        }
+
+        [HttpPost("CreateUser")]
+        public async Task<IActionResult> CreateUser([FromBody] BasicUserRequestModel request)
+        {
+            if (request is null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Senha))
+            {
+                return BadRequest(new { message = "Email e Senha são obrigatórios." });
+            }
+
+            var createUser = await _userService.CreateUser(request);
+            if (!createUser)
+            {
+                return BadRequest(new { message = "Erro ao criar usuário." });
+            }
+
+            return Ok(new { message = "Usuário criado com sucesso." });
         }
     }
 }
