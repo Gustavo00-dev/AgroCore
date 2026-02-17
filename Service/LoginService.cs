@@ -22,7 +22,7 @@ namespace APIAgroCoreOrquestradora.Service
         {
             try
             {
-                var url = "http://agrocorelogin/api/LoginUser/login";
+                var url = "http://agrocorelogin/api/Login/login";
                 //var url = "http://localhost/api/LoginUser/login";
                 var json = JsonSerializer.Serialize(request);
 
