@@ -28,14 +28,15 @@ namespace APIAgroCoreOrquestradora.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginRequestModel request)
+        public async Task<IActionResult> Login([FromBody] LoginRequestModel request)
         {
             if (request is null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Senha))
             {
                 return BadRequest(new { message = "Email e Senha são obrigatórios." });
             }
 
-            if (!_loginService.Authenticate(request))
+            var isAuthenticated = await _loginService.Authenticate(request);
+            if (!isAuthenticated)
             {
                 return Unauthorized(new { message = "Credenciais inválidas." });
             }

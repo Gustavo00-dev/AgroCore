@@ -9,7 +9,7 @@ namespace APIAgroCoreOrquestradora.Configuracao
             services.AddHttpContextAccessor();
 
             #region Services/Repository   
-            services.AddScoped<ILoginService, LoginService>();
+            services.AddHttpClient<ILoginService, LoginService>();
             #endregion
 
             return services;

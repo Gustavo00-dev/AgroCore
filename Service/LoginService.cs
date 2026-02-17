@@ -1,19 +1,43 @@
-﻿using APIAgroCoreOrquestradora.Model;
+﻿using System.Text;
+using System.Text.Json;
+using APIAgroCoreOrquestradora.Model;
 
 namespace APIAgroCoreOrquestradora.Service
 {
     public interface ILoginService
     {
-        bool Authenticate(LoginRequestModel request);
+        Task<bool> Authenticate(LoginRequestModel request);
     }
+
     public class LoginService : ILoginService
     {
-        public LoginService() { }
+        private readonly HttpClient _httpClient;
 
-        public bool Authenticate(LoginRequestModel request)
+        public LoginService(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
+        public async Task<bool> Authenticate(LoginRequestModel request)
         {
             try
             {
+                var url = "http://agrocorelogin/api/LoginUser/login";
+                //var url = "http://localhost/api/LoginUser/login";
+                var json = JsonSerializer.Serialize(request);
+
+                var content = new StringContent(
+                    json,
+                    Encoding.UTF8,
+                    "application/json"
+                );
+
+                var response = await _httpClient.PostAsync(url, content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return false;
+                }
 
                 return true;
             }
