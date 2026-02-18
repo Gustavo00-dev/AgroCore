@@ -68,6 +68,11 @@ namespace APIAgroCoreOrquestradora.Controllers
             return Ok(new LoginResponseModel { Token = tokenString, ExpiresAt = tokenDescriptor.Expires });
         }
 
+        /// <summary>
+        /// Endpoint para criação de novos usuários. Recebe email e senha, valida os dados e solicita ao serviço de usuário a criação do novo usuário. Retorna uma mensagem de sucesso ou erro.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("CreateUser")]
         public async Task<IActionResult> CreateUser([FromBody] BasicUserRequestModel request)
         {

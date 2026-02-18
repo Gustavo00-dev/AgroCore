@@ -9,7 +9,8 @@ namespace APIAgroCoreOrquestradora.Service
 {
     public interface IDadosService
     {
-        Task PublishPropriedadeAsync(ProriedadeRequestModel request, string correlationId);
+        Task PublishCreatePropriedadeAsync(ProriedadeRequestModel request, string correlationId);
+        Task PublishGetPropriedadeAsync(string correlationId);
     }
 
     public class DadosService : IDadosService
@@ -22,7 +23,7 @@ namespace APIAgroCoreOrquestradora.Service
             _rabbitMqService = rabbitMqService;
         }
 
-        public async Task PublishPropriedadeAsync(ProriedadeRequestModel request, string correlationId)
+        public async Task PublishCreatePropriedadeAsync(ProriedadeRequestModel request, string correlationId)
         {
             if (request is null)
                 throw new ArgumentNullException(nameof(request));
@@ -36,6 +37,26 @@ namespace APIAgroCoreOrquestradora.Service
                 {
                     nome = request.Nome,
                     area = request.Area
+                }
+            };
+
+            var message = JsonSerializer.Serialize(envelope);
+            var body = Encoding.UTF8.GetBytes(message);
+
+            await _rabbitMqService.PublishAsync(_queueName, body, correlationId, persistent: true);
+        }
+
+        public async Task PublishGetPropriedadeAsync(string correlationId)
+        {
+            var envelope = new
+            {
+                command = "get",
+                timestamp = DateTime.UtcNow.ToString("o"),
+                correlationId = correlationId,
+                data = new
+                {
+                    nome = "",
+                    area = ""
                 }
             };
 

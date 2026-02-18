@@ -23,9 +23,18 @@ namespace APIAgroCoreOrquestradora.Controllers
 
             var correlationId = Guid.NewGuid().ToString();
 
-            await _dadosService.PublishPropriedadeAsync(request, correlationId);
+            await _dadosService.PublishCreatePropriedadeAsync(request, correlationId);
 
             return Ok(new { message = "Propriedade publicada na fila com sucesso.", correlationId });
         }
+
+        [HttpGet("GetPropriedades")]
+        public IActionResult GetPropriedades()
+        {
+            
+
+
+        }
+
     }
 }
