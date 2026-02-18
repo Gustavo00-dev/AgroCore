@@ -19,7 +19,7 @@ namespace APIAgroCoreOrquestradora.Service
 
         public RabbitMqService(IConfiguration configuration)
         {
-            var host = configuration["RabbitMQ:Host"] ?? "localhost";
+            var host = configuration["RabbitMQ:Host"] ?? "host.docker.internal";
             var user = configuration["RabbitMQ:User"] ?? "guest";
             var pass = configuration["RabbitMQ:Password"] ?? "guest";
             var port = int.TryParse(configuration["RabbitMQ:Port"], out var p) ? p : 5672;
