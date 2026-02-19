@@ -31,8 +31,8 @@ namespace APIAgroCoreOrquestradora.Controllers
         [HttpGet("GetPropriedades")]
         public IActionResult GetPropriedades()
         {
-            
 
+            return Ok();
 
         }
 

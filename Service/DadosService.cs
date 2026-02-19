@@ -3,7 +3,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using APIAgroCoreOrquestradora.Model;
-using Microsoft.Extensions.Configuration;
 
 namespace APIAgroCoreOrquestradora.Service
 {
@@ -35,6 +34,7 @@ namespace APIAgroCoreOrquestradora.Service
                 correlationId = correlationId,
                 data = new
                 {
+                    idUsers = request.IdUsers,
                     nome = request.Nome,
                     area = request.Area
                 }
