@@ -18,8 +18,8 @@ namespace APIAgroCoreOrquestradora.Controllers
         [HttpPost("CadastrarPropriedade")]
         public async Task<IActionResult> CadastrarPropriedade([FromBody] ProriedadeRequestModel request)
         {
-            if (request is null || string.IsNullOrWhiteSpace(request.Nome))
-                return BadRequest(new { message = "Nome da propriedade é obrigatório." });
+            if (request is null || string.IsNullOrWhiteSpace(request.Nome) || request.IdUsers <= 0)
+                return BadRequest(new { message = "Nome da propriedade e ID do Proprietario são obrigatórios." });
 
             var correlationId = Guid.NewGuid().ToString();
 
@@ -28,13 +28,17 @@ namespace APIAgroCoreOrquestradora.Controllers
             return Ok(new { message = "Propriedade publicada na fila com sucesso.", correlationId });
         }
 
-        [HttpGet("GetPropriedades")]
-        public IActionResult GetPropriedades()
+        [HttpPost("CadastrarTalhao")]
+        public async Task<IActionResult> CadastrarTalhao([FromBody] TalhaoRequestModel request)
         {
+            if (request is null || string.IsNullOrWhiteSpace(request.Nome) || request.PropriedadeId <= 0)
+                return BadRequest(new { message = "Nome do talhão e ID da propriedade são obrigatórios." });
 
-            return Ok();
+            var correlationId = Guid.NewGuid().ToString();
 
+            await _dadosService.PublishCreateTalhaoAsync(request, correlationId);
+
+            return Ok(new { message = "Talhão publicado na fila com sucesso.", correlationId });
         }
-
     }
 }
