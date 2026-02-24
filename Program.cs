@@ -1,4 +1,5 @@
 using APIAgroCoreOrquestradora.Configuracao;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,9 @@ builder.Services.ResolveDependencies();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseHttpMetrics();
+
+app.MapMetrics();
 
 app.UseHttpsRedirection();
 
