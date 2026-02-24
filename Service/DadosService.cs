@@ -10,6 +10,7 @@ namespace APIAgroCoreOrquestradora.Service
     {
         Task PublishCreatePropriedadeAsync(ProriedadeRequestModel request, string correlationId);
         Task PublishCreateTalhaoAsync(TalhaoRequestModel request, string correlationId);
+        Task PublishCreateSensorAsync(DadosSensorRequestModel request, string correlationId);
     }
 
     public class DadosService : IDadosService
@@ -64,6 +65,30 @@ namespace APIAgroCoreOrquestradora.Service
                     nome = request.Nome,
                     area = request.Area,
                     descricao = request.Descricao
+                }
+            };
+            var message = JsonSerializer.Serialize(envelope);
+            var body = Encoding.UTF8.GetBytes(message);
+            await _rabbitMqService.PublishAsync(queueName, body, correlationId, persistent: true);
+        }
+
+        public async Task PublishCreateSensorAsync(DadosSensorRequestModel request, string correlationId)
+        {
+            string queueName = "queue.sensores.command";
+            if (request is null)
+                throw new ArgumentNullException(nameof(request));
+            var envelope = new
+            {
+                command = "create",
+                timestamp = DateTime.UtcNow.ToString("o"),
+                correlationId = correlationId,
+                data = new
+                {
+                    talhaoId = request.TalhaoId,
+                    temperatura = request.Temperatura,
+                    umidadeSolo = request.UmidadeSolo,
+                    nivelPrecipitacao = request.NivelPreciptacao,
+                    dataUltimaAtualizacao = request.DataUltimaAtualizacao.ToString("o")
                 }
             };
             var message = JsonSerializer.Serialize(envelope);

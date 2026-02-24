@@ -40,5 +40,14 @@ namespace APIAgroCoreOrquestradora.Controllers
 
             return Ok(new { message = "Talhão publicado na fila com sucesso.", correlationId });
         }
+        [HttpPost("CadastrarSensores")]
+        public async Task<IActionResult> CadastrarSensores([FromBody] DadosSensorRequestModel request)
+        {
+            if (request is null || request.TalhaoId <= 0)
+                return BadRequest(new { message = "ID do talhão é obrigatórios." });
+            var correlationId = Guid.NewGuid().ToString();
+            await _dadosService.PublishCreateSensorAsync(request, correlationId);
+            return Ok(new { message = "Sensor publicado na fila com sucesso.", correlationId });
+        }
     }
 }
