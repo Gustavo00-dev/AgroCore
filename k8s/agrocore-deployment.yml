@@ -52,13 +52,13 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: api-agrocore-monitor
+  name: api-agrocoreorquestradora-monitor
   labels:
     release: monitoring
 spec:
   selector:
     matchLabels:
-      app: agrocoredados
+      app: agrocoreorquestradora
   endpoints:
     - port: http
       path: /metrics
