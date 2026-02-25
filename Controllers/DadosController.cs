@@ -1,6 +1,7 @@
 ﻿using APIAgroCoreOrquestradora.Model;
 using APIAgroCoreOrquestradora.Service;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace APIAgroCoreOrquestradora.Controllers
 {
@@ -40,7 +41,9 @@ namespace APIAgroCoreOrquestradora.Controllers
 
             return Ok(new { message = "Talhão publicado na fila com sucesso.", correlationId });
         }
+
         [HttpPost("CadastrarSensores")]
+        [Authorize]
         public async Task<IActionResult> CadastrarSensores([FromBody] DadosSensorRequestModel request)
         {
             if (request is null || request.TalhaoId <= 0)
