@@ -19,7 +19,7 @@ flowchart LR
         D["RabbitMQ<br>Filas:<br>- Cadastro de Propriedade<br>- Cadastro de Talhões<br>- Ingestão Sensores"]
     end
 
-    subgraph Notificações
+    subgraph Alertas
         F(MSAgroNotificacao)
     end
 
@@ -27,7 +27,7 @@ flowchart LR
         E["APIAgroCoreDados<br>Gerência Propriedades e Talhões<br>Consumer RabbitMQ"]
     end
 
-    C[(MongoDB)]
+    C[(MySql)]
     
     A -->|HTTPS| B
     A -->|Publica mensagens| D
@@ -41,12 +41,6 @@ flowchart LR
 ```mermaid
 flowchart LR
 
-    %% ========================
-    %% APM
-    %% ========================
-    subgraph APM["Observabilidade"]
-        NR["New Relic APM"]
-    end
     %% ========================
     %% CI/CD
     %% ========================
@@ -65,22 +59,26 @@ flowchart LR
     %% ========================
     %% AMBIENTE LOCAL
     %% ========================
-    subgraph LOCAL["Ambiente Local"]
-
-        DD["Docker Desktop"]
-
-        APP["Application Container"]
+    subgraph LOCAL["Docker Desktop"]
+        Conteiner["Conteiner"]
+        BD["Mysql Container"]
 
         MQ["RabbitMQ Container<br>Mensageria"]
 
-        DD --> APP
-        DD --> MQ
+        K8s["Kubernates<br>Aplicações"]
 
+        AgroCoreOrquestradora["AgroCoreOrquestradora"]
+        AgroCoreLogin["AgroCoreLogin"]
+        AgroCoreDados["AgroCoreDados"]
+        MSAgroNotificacao["MSAgroNotificacao"]
+
+        Conteiner --> MQ
+        Conteiner --> BD
+
+         K8s --> AgroCoreOrquestradora
+         K8s --> AgroCoreLogin
+         K8s --> AgroCoreDados
+         K8s --> MSAgroNotificacao
     end
-
-
-    %% ========================
-    %% FLUXOS
-    %% ==========
 
 ```
